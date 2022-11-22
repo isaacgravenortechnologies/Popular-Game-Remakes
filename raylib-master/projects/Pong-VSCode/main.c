@@ -20,22 +20,24 @@
 int main(void)
 {
     
+    
     // Initialization
     //--------------------------------------------------------------------------------------
     bool hasLeftClicked = true;
     bool hasRightClicked = false;
     bool hasUpClicked = false;
     bool hasDownClicked = false;
-    bool leftLastClicked = false;
-    bool rightLastClicked = false;
-    bool upLastClicked = false;
-    bool downLastClicked = false;
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    //bool leftLastClicked = false;
+    //bool rightLastClicked = false;
+    //bool upLastClicked = false;
+    //bool downLastClicked = false;
+    const int screenWidth = 500;
+    const int screenHeight = 500;
     int score = 0;
-    int textLength = 0;
     InitWindow(screenWidth, screenHeight, "PONG");
     Vector2 ballPosition = { (float)screenWidth/2, (float)screenHeight/2 };
+    Vector2 ballSize = { (float)20, (float)20 };
+    Vector2 textPos = { (float)screenWidth/2, (float)20};
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -48,7 +50,7 @@ int main(void)
             hasDownClicked=false; 
             hasUpClicked=true;
         }
-        if(x==true && ballPosition.y>(GetMousePosition().y)-30 && ballPosition.y<(GetMousePosition().y)+30) score=score+1;
+        if(x==true && ballPosition.y>(GetMousePosition().y)-40 && ballPosition.y<(GetMousePosition().y)+40) score=score+1;
         else if(x==true) score=0;
         if(hasLeftClicked==true && x==true) hasLeftClicked=false;
         else if(x==true) hasLeftClicked=true;
@@ -131,20 +133,20 @@ int main(void)
         if(!IsKeyDown(KEY_DOWN)) downLastClicked = false;
         //----  */
         //----------------------------------------------------------------------------------
-        if(ballPosition.x<screenWidth-25) {
-            if (hasRightClicked==true) ballPosition.x += (float) score+1;
+        if(ballPosition.x<screenWidth-20) {
+            if (hasRightClicked==true) ballPosition.x += (float) score+2;
         }
         else toggle(true);
-        if(ballPosition.x>25) { 
-            if (hasLeftClicked==true) ballPosition.x -= (float) score+1;
+        if(ballPosition.x>15) { 
+            if (hasLeftClicked==true) ballPosition.x -= (float) score+2;
         }
         else toggle(true);
-        if(ballPosition.y>25) {
-            if (hasUpClicked==true) ballPosition.y -= (float) score+1;
+        if(ballPosition.y>5) {
+            if (hasUpClicked==true) ballPosition.y -= (float) score+2;
         }
         else toggle(false);
-        if(ballPosition.y<screenHeight-25) {
-            if (hasDownClicked==true) ballPosition.y += (float) score+1;
+        if(ballPosition.y<screenHeight-15) {
+            if (hasDownClicked==true) ballPosition.y += (float) score+2;
         }
         else toggle(false);
         
@@ -152,10 +154,11 @@ int main(void)
         //----------------------------------------------------------------------------------
         BeginDrawing();
             ClearBackground(BLACK);
-            textLength = MeasureText("Score: 0", 20);
-            DrawText(TextFormat("Score: %i", score), screenWidth/2-(textLength/2), 20, 20, WHITE);
-
-            DrawCircleV(ballPosition, 20, WHITE);
+            
+            DrawTextEx(LoadFont("/resources/pong.ttf"), TextFormat("%i", score), textPos, 100, 1, WHITE);
+            //DrawText(TextFormat("Score: %i", score), screenWidth/2-(textLength/2), 20, 20, WHITE);
+            DrawRectangleV(ballPosition, ballSize, WHITE);
+            //DrawCircleV(ballPosition, 20, WHITE);
             DrawRectangle(0, GetMousePosition().y-25, 10, 50, WHITE); 
             DrawRectangle(screenWidth-10, GetMousePosition().y-25, 10, 50, WHITE); 
         EndDrawing();
