@@ -35,6 +35,8 @@ int main(void)
     const int screenHeight = 500;
     int score = 0;
     InitWindow(screenWidth, screenHeight, "PONG");
+    Image logo = LoadImage("resources/logo.png");             // Load image in CPU memory (RAM)
+    Texture2D logotexture = LoadTextureFromImage(logo);      // Image converted to texture, uploaded to GPU memory (VRAM)
     Vector2 ballPosition = { (float)screenWidth/2, (float)screenHeight/2 };
     Vector2 ballSize = { (float)20, (float)20 };
     Vector2 textPos = { (float)screenWidth/2, (float)20};
@@ -154,7 +156,8 @@ int main(void)
         //----------------------------------------------------------------------------------
         BeginDrawing();
             ClearBackground(BLACK);
-            
+            //DrawTexture(logotexture, screenWidth/2 - logotexture.width/2, screenHeight/4 - logotexture.height/2 - 40, WHITE);
+
             DrawTextEx(LoadFont("/resources/pong.ttf"), TextFormat("%i", score), textPos, 100, 1, WHITE);
             //DrawText(TextFormat("Score: %i", score), screenWidth/2-(textLength/2), 20, 20, WHITE);
             DrawRectangleV(ballPosition, ballSize, WHITE);
