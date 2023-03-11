@@ -35,6 +35,7 @@ int main(void)
     const int screenHeight = 500;
     int score = 0;
     InitWindow(screenWidth, screenHeight, "PONG");
+    SetTargetFPS(60);
     Image logo = LoadImage("resources/logo.png");             // Load image in CPU memory (RAM)
     Texture2D logotexture = LoadTextureFromImage(logo);      // Image converted to texture, uploaded to GPU memory (VRAM)
     Vector2 ballPosition = { (float)screenWidth/2, (float)screenHeight/2 };

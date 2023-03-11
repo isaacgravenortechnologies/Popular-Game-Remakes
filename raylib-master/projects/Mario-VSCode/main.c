@@ -13,14 +13,21 @@
 
 #include "raylib.h"
 #include "stdio.h"
+#include "stdlib.h"
 
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
 int main(void)
 {
-    
-    
+    typedef struct block {
+        char type;
+        bool visible;
+        Rectangle box;
+        Texture2D texture;
+        int state;
+    } Block;
+    Block LuckyB1= {(char)"l", true, (Rectangle){0, 512, 64, 64}, LoadTexture("resources/luckyb.png"), 0};
     // Initialization
     //--------------------------------------------------------------------------------------
 
@@ -37,7 +44,8 @@ int main(void)
     Vector2 MarioPosition = {screenWidth/2, screenHeight/2};
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     int framesToJump = 0;
- 
+    Rectangle LuckyBArea = {0, 512, 64, 64};
+    Rectangle marioArea = {0, 0, 64, 64};
     int DistanceOffset = 0;
     //--------------------------------------------------------------------------------------
     // Main game loop
@@ -50,35 +58,57 @@ int main(void)
            int BrickDistance = 0;
             ClearBackground((Color){ 7, 155, 176, 1 });
             DrawTextureEx(MarioSprite, MarioPosition, 0, 4, WHITE);
-            
+            LuckyBArea.x = 1130-DistanceOffset;
+            marioArea.x = MarioPosition.x-74;
+            marioArea.y = MarioPosition.y-74;
+            if(CheckCollisionRecs(marioArea, LuckyBArea)) {
+                LuckyB = LoadTexture("resources/emptylb.png");
+            }
             while(BrickDistance-DistanceOffset<screenWidth) {
                 DrawTextureEx(FloorB, (Vector2) {BrickDistance-DistanceOffset, screenHeight-128}, 0, 4, WHITE);
                 DrawTextureEx(FloorB, (Vector2) {BrickDistance-DistanceOffset, screenHeight-64}, 0, 4, WHITE);
                 BrickDistance=BrickDistance+64;
             }
+            
+            
+            if(IsKeyDown(KEY_SEMICOLON)) {
+
+            }
             if((IsKeyDown(KEY_SPACE)) && (MarioPosition.y>screenHeight-200)) {
-                if(!(MarioPosition.x>=1100-DistanceOffset && MarioPosition.x<=1300-DistanceOffset)) {
+                if(!(CheckCollisionRecs(marioArea, LuckyBArea))) {
                     framesToJump = 20;
-                }
-                else {
-                    framesToJump = 10;
                 }
                 
             }
             if(IsKeyDown(KEY_D)) {
-                DistanceOffset=DistanceOffset+8;
+                if(!(CheckCollisionRecs(marioArea, LuckyBArea))) {
+                    DistanceOffset=DistanceOffset+8;
+                }
+                
             }
             if(IsKeyDown(KEY_A)) {
                 if(!(DistanceOffset<8)) {
+                if(!(CheckCollisionRecs(marioArea, LuckyBArea))) {
                 DistanceOffset=DistanceOffset-8;
+                }
             }
             }
             if(framesToJump>0) {
+                    MarioSprite = LoadTexture("resources/mario-j.png");
+                    if(!(CheckCollisionRecs(marioArea, LuckyBArea))) {
                     MarioPosition.y=MarioPosition.y-20;
+                    }
+                    else {
+                        framesToJump=1;
+                    }
                     framesToJump=framesToJump-1;
             }
             if(MarioPosition.y<screenHeight-192) {
-            MarioPosition.y=MarioPosition.y+10;
+            MarioSprite = LoadTexture("resources/mario-j.png");
+            MarioPosition.y=MarioPosition.y+12;
+            }
+            else {
+                MarioSprite = LoadTexture("resources/mario.png");
             }
             //DrawTexture(logotexture, screenWidth/2 - logotexture.width/2, screenHeight/4 - logotexture.height/2 - 40, WHITE);
 
